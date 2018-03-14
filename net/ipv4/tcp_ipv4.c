@@ -1607,6 +1607,7 @@ int tcp_v4_rcv(struct sk_buff *skb, unsigned short len)
 	struct sock *sk;
 	int ret;
 
+    /* 判断是否是上送本机的报文，如果不是就丢弃 */
 	if (skb->pkt_type!=PACKET_HOST)
 		goto discard_it;
 
@@ -1636,6 +1637,7 @@ int tcp_v4_rcv(struct sk_buff *skb, unsigned short len)
 	TCP_SKB_CB(skb)->sacked = 0;
 	skb->used = 0;
 
+	/* 判断当前报文socket是否合法 如果socket不存在跳转到 no_tcp_socket*/
 	sk = __tcp_v4_lookup(skb->nh.iph->saddr, th->source,
 			     skb->nh.iph->daddr, ntohs(th->dest), tcp_v4_iif(skb));
 
